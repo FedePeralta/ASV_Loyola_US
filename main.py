@@ -67,11 +67,6 @@ def reached_position(current_loc, goal_loc):
     c = 2.0 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))
     return 6378100.0 * c < 2.5
 
-    # dlat = goal_loc.lat - current_loc.lat
-    # dlong = goal_loc.lon - current_loc.lon
-    # print(dlat, dlong, np.sqrt((dlat * dlat) + (dlong * dlong)) * 1.113195e5)
-    # return np.sqrt((dlat * dlat) + (dlong * dlong)) * 1.113195e5 < 2.5
-
 
 if __name__ == '__main__':
 
@@ -101,6 +96,7 @@ if __name__ == '__main__':
         time.sleep(1)
 
     # Cerramos la conexion con el navio2
+    vehicle.disarm()
     vehicle.close()
 
     # Cerramos la conexion con los sensores #
