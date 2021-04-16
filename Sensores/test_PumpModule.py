@@ -27,7 +27,7 @@ if __name__ == '__main__':
         # Esperamos un segundo después de cargarla
         time.sleep(1)
         # La descargamos
-        bomba.charge_probe()
+        bomba.discharge_probe()
 
 
     # Eliminamos el objeto bomba #
