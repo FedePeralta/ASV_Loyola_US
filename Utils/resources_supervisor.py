@@ -13,12 +13,15 @@ if __name__ == '__main__':
     args = parser.parse_args()
     max_time = args.time
 
-    data = np.array([[psutil.cpu_percent(), psutil.virtual_memory().percen]])
+    data = np.array([[psutil.cpu_percent(), psutil.virtual_memory().percent]])
 
-    while time()-time0 < max_time:
+    while time()-time0 < max_time:s
+
+        sleep(1)
 
         cpu = psutil.cpu_percent()
         mem = psutil.virtual_memory().percent
+        print('CPU: ',cpu,' MEM: ',mem)
         
         data = np.vstack((data, [cpu, mem]))
         
