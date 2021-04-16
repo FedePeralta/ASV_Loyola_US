@@ -26,7 +26,7 @@ class GPIO():
 
     @staticmethod
     def __set_gpio_mode(channel, direction):
-        os.system('echo "{}" > /sys/class/gpio/gpio{}/direction'.format(500 + channel - 1, direction))
+        os.system('echo "{}" > /sys/class/gpio/gpio{}/direction'.format(direction,500 + channel - 1))
         
     @staticmethod
     def __attach_gpio(channel):
@@ -43,60 +43,43 @@ class GPIO():
         os.system('echo "{}" > /sys/class/gpio/gpio{}/value'.format(wr_value, 500 + self.channel - 1))
 
     def __del__(self):
+        self.write_gpio('LOW')
         self.__clean_gpio(self.channel)
-        print('GPIO object {self.channel} freed!')
+        print('GPIO object {} freed!'.format(self.channel))
 
 class WaterPumpModule():
 
-    def __init__(self,
-                 activation_channel=8,
-                 direction_channel=9,
-                 reverse_direction=False,
-                 charging_time=5,
-                 discharging_time=5):
+    def __init__(self,activation_channel=8, charging_time=5, discharging_time=5):
 
-        assert activation_channel != direction_channel, "ACTIVATION CHN AND DIRECTION CHN MUST BE DIFFERENT!"
         assert charging_time > 0 and discharging_time > 0, "CHARGE/DISCHARGE TIME MUST BE GREATER THAN 0!"
 
         self.activation_pin = GPIO(channel=activation_channel, mode='out')
-        self.direction_pin = GPIO(channel=direction_channel, mode='out')
 
         self.charging_time = charging_time
         self.discharging_time = discharging_time
 
         self.activation_pin.write_gpio('LOW')
-        self.direction_pin = GPIO(channel=direction_channel, mode='out')
-        self.reverse_direction = reverse_direction
 
     def charge_probe(self):
 
-        # Set direction of water movement #
-        if self.reverse_direction:
-            self.direction_pin.write_gpio('HIGH')
-        else:
-            self.direction_pin.write_gpio('LOW')
-
         # Move water for a time #
         self.activation_pin.write_gpio('HIGH')
+        # Wait until the probe is full #
         sleep(self.charging_time)
-
-        # Stop water #
+        # When full, deactivate the pump #
         self.activation_pin.write_gpio('LOW')
 
     def discharge_probe(self):
 
-        # Set direction of water movement #
-        if self.reverse_direction:
-            self.direction_pin.write_gpio('LOW')
-        else:
-            self.direction_pin.write_gpio('HIGH')
-
-        # Move water for a time #
+        # Activate the pump to discharge
         self.activation_pin.write_gpio('HIGH')
-        sleep(self.discharging_time)
-
-        # Stop water #
+        # Wait for the discharge time
+        sleep(self.charging_time)
+        # Deactivate the pump
         self.activation_pin.write_gpio('LOW')
+
+
+
 
 
 
