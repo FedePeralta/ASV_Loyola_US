@@ -2,13 +2,14 @@ import serial
 import time
 import sqlite3
 from datetime import datetime
+from PumpModule import WaterPumpModule
 
 
 class WaterQualityModule():
 
     """ Class for the water quality module sensor aka Libellium. """
 
-    def __init__(self, database_name = 'LOCAL_DATABASE.db', USB_string = 'USB1', timeout = 6, baudrate = 115200):
+    def __init__(self, database_name = 'LOCAL_DATABASE.db', USB_string = 'USB1', timeout = 6, baudrate = 115200, pump_parameters = None):
 
         """ Create the serial object """
         self.serial = serial.Serial('/dev/tty' + USB_string, baudrate, timeout=timeout)
@@ -22,8 +23,22 @@ class WaterQualityModule():
         """ Initialize the data dictionary of the sensor measurements """
         self.sensor_data = {}
 
+        """ Create the Pump Module object """
+        if pump_parameters is None:
+            pump_parameters = {'activation_channel': 8,
+                               'charging_time': 6,
+                               'discharging_time':1.2}
+
+        self.pump = WaterPumpModule(activation_channel=pump_parameters['activation_channel'],
+                                    charging_time=pump_parameters['charging_time'],
+                                    discharging_time=pump_parameters['discharging_time'])
+
+
     def take_a_sample(self, position, num_of_samples = 1):
         """ Take num_of_samples and save the data with the given position in the database """
+
+        """ Charge the pump!"""
+        self.pump.charge_probe()
 
         # Iterate over the sample_nums
         for _ in range(num_of_samples):
@@ -118,6 +133,9 @@ class WaterQualityModule():
                     # Marcamos el flag de muestra guardada con exito
                     sample_adquisition_status = True
 
+        """ Discharge the pump!"""
+        self.pump.discharge_probe()
+
         return True
 
     def close(self):
@@ -128,3 +146,13 @@ class WaterQualityModule():
         print("Cerrando puerto serie!")
         self.serial.close()  # Cerramos la com. serie
         print("Puerto serie cerrado!")
+
+    def __del__(self):
+
+        print("Cerrando base de datos!")
+        self.database.close()  # Cerramos la DB
+        print("Base de datos cerrada")
+        print("Cerrando puerto serie!")
+        self.serial.close()  # Cerramos la com. serie
+        print("Puerto serie cerrado!")
+

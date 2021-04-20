@@ -1,7 +1,7 @@
 
 from SensorModule import WaterQualityModule
 import signal
-
+from time import sleep
 
 keep_going = True
 
@@ -23,6 +23,8 @@ if __name__ == '__main__':
 
     while keep_going:
 
+        # Esperamos 2 segundos #
+        sleep(2)
         # Tomamos muestras continuamente #
         modulo_de_sensores.take_a_sample(position = [0.0, 0.0],
                                          num_of_samples = 1)

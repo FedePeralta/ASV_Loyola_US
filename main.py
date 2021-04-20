@@ -3,12 +3,13 @@ import time
 
 import numpy as np
 from dronekit import connect, VehicleMode, LocationGlobal
-
+from Sensores.SensorModule import WaterQualityModule
 from KMLMissionGeneration import KMLMissionGenerator
 
 keep_going = True
+DEBUG = True
 
-mg = KMLMissionGenerator('kml_files/Misiones_Dron_US_Loyola_2.kml')
+mg = KMLMissionGenerator('MisionesLoyola.kml')
 
 loyola_wps = mg.get_mission_list()[0]
 
@@ -65,39 +66,48 @@ def reached_position(current_loc, goal_loc):
 
     a = np.sin(0.5 * d_lat)**2 + np.sin(0.5 * d_lon)**2 * np.cos(lat1) * np.cos(lat2)
     c = 2.0 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))
-    return 6378100.0 * c < 2.5
+    return 6378100.0 * c < 0.5
 
 
 if __name__ == '__main__':
 
     # Creamos el objeto del modulo del AutoPilot
-    vehicle = connect('tcp:127.0.0.1:5760', timeout=6, baud=115200, wait_ready=True)
+    vehicle = connect('tcp:127.0.0.1:5762', timeout=6, baud=115200, wait_ready=True)
     # vehicle = connect('dev/ttyUSBO', timeout=6, baud=115200)
+
     # Creamos el objeto de modulo de sensores #
-    # modulo_de_sensores = WaterQualityModule(database_name='LOCAL_DATABASE.db',
-    #                                         USB_string='USB1',
-    #                                         timeout=6,
-    #                                         baudrate=115200)
+    modulo_de_sensores = WaterQualityModule(database_name='LOCAL_DATABASE.db',
+                                            USB_string='USB1',
+                                            timeout=6,
+                                            baudrate=115200)
     arm(vehicle)
     print("Starting mission")
 
     while keep_going:
+
         point2go = get_next_loyola_lake_wp(vehicle)
         vehicle.simple_goto(point2go)
+
         while not reached_position(vehicle.location.global_relative_frame, point2go):
             continue
+
         # Tomamos muestras continuamente #
         vehicle.mode = VehicleMode("LOITER")
         print("TOMANDO MUESTRAS", len(loyola_wps))
-        time.sleep(3)
-        # modulo_de_sensores.take_a_sample(position=[0.0, 0.0],
-        #                                  num_of_samples=1)
+
+        if DEBUG:
+            time.sleep(3)
+        else:
+            position = vehicle.location.global_relative_frame
+            modulo_de_sensores.take_a_sample(position=[position.lat, position.lat], num_of_samples=1)
+
         vehicle.mode = VehicleMode("GUIDED")
         time.sleep(1)
 
     # Cerramos la conexion con el navio2
+    print('FINISHING MISSION')
     vehicle.disarm()
     vehicle.close()
 
     # Cerramos la conexion con los sensores #
-    # modulo_de_sensores.close()
+    modulo_de_sensores.close()

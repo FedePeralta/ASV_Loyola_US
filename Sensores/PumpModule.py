@@ -74,7 +74,7 @@ class WaterPumpModule():
         # Activate the pump to discharge
         self.activation_pin.write_gpio('HIGH')
         # Wait for the discharge time
-        sleep(self.charging_time)
+        sleep(self.discharging_time)
         # Deactivate the pump
         self.activation_pin.write_gpio('LOW')
 
