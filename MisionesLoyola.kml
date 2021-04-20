@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>MisionesLoyola</name>
+	<gx:CascadingStyle kml:id="__managed_style_2FC737D9D21A255846E1">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_0796CEBBF41A255846E1">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_16758B56E71A255846E1</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_2FC737D9D21A255846E1</styleUrl>
+		</Pair>
+	</StyleMap>
+	<gx:CascadingStyle kml:id="__managed_style_217AFFBD8A1A25573082">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2f2fd3</color>
+				<width>6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_16758B56E71A255846E1">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_194B5111E51A25573082">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2f2fd3</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_033F8C9D001A25573082">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_194B5111E51A25573082</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_217AFFBD8A1A25573082</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark id="038FFB9F191A2556F1A8">
+		<name>Mision1</name>
+		<LookAt>
+			<longitude>-5.940283471256183</longitude>
+			<latitude>37.3074673826133</latitude>
+			<altitude>31.15054921144184</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>24.99758558309622</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_033F8C9D001A25573082</styleUrl>
+		<LineString>
+			<coordinates>
+				-5.940282292580786,37.30752847965812,31.14904331822171 -5.940201847823071,37.30744621271428,31.14906915253077 -5.940304318197796,37.30730377896142,31.15792694518453 -5.940199932421594,37.30744545092469,31.14907868160238 -5.940048619594346,37.30744925935799,31.14905889915918 -5.940198974747064,37.3074454509665,31.14906931521534 -5.940275852101927,37.3075220003937,31.1505527381603 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark id="0F5270A5A91A255846E0">
+		<name>Mision2</name>
+		<LookAt>
+			<longitude>-5.940095423428894</longitude>
+			<latitude>37.30751126655251</latitude>
+			<altitude>32.3166635060209</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>77.58411665690801</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0796CEBBF41A255846E1</styleUrl>
+		<LineString>
+			<coordinates>
+				-5.940234386387234,37.3074524329031,31.12928004774791 -5.940163657142153,37.30743286991233,31.11192163852661 -5.940080886199154,37.30744527381848,31.11191636330274 -5.940013113890449,37.30748295702562,31.13788232802259 -5.939955034806257,37.30752297324494,31.15386068124275 -5.939907632573068,37.30756350702078,31.1891795330189 -5.939868711801493,37.3076054629619,31.15271489384569 -5.939834521471435,37.30766165806751,31.21514174467655 -5.939835137851952,37.30770558007317,31.16210454619921 -5.939848935095899,37.30774329080531,31.14066937917432 -5.939802169815751,37.30774897709361,31.15704386648294 -5.939776990293644,37.30771656669473,31.15054443841814 -5.939807563874541,37.30767894533511,31.11418031850153 -5.93983392311652,37.30766118391677,31.21309025552072 -5.939868710286015,37.30760498537734,31.154733408962 -5.939905834953275,37.30756303044053,31.18918415750451 -5.939954440799513,37.30752201772177,31.15089432199187 -5.940014431826769,37.30748289884873,31.1348356931337 -5.940082267712407,37.30744470679626,31.11191174023177 -5.940163799465557,37.3074318344721,31.111907567019 -5.940224377760646,37.30747572492296,31.11222630286429 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark id="0FCB17869E1A25589DD8">
+		<name>Mision3</name>
+		<LookAt>
+			<longitude>-5.940095423428894</longitude>
+			<latitude>37.30751126655251</latitude>
+			<altitude>32.3166635060209</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>77.58411665690801</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0796CEBBF41A255846E1</styleUrl>
+		<LineString>
+			<coordinates>
+				-5.940287262241679,37.30748766303158,31.15054952973773 -5.940244769396706,37.30749862427608,31.11283603329979 -5.940198587302098,37.30749767003992,31.11192059310145 -5.940148230780685,37.30748477623213,31.07329551704065 -5.940108621450769,37.30745997130816,31.09610220407824 -5.940087026391778,37.30742944910485,31.1119173648738 -5.940102618231927,37.30740372735711,31.1412402195107 -5.94014398259762,37.30739658746404,31.15055403822218 -5.940188377802952,37.30740751838451,31.12294680974765 -5.940230363073872,37.3074304110048,31.11953769384104 -5.940277070765746,37.30745094663965,31.15054020296084 -5.940301050648536,37.30746858952983,31.15054906856235 
+			</coordinates>
+		</LineString>
+	</Placemark>
+</Document>
+</kml>
