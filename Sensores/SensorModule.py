@@ -27,11 +27,15 @@ class WaterQualityModule():
         if pump_parameters is None:
             pump_parameters = {'activation_channel': 8,
                                'charging_time': 6,
-                               'discharging_time':1.2}
+                               'discharging_time': 1.2,
+                               'serial_string': '/dev/ttyUSB3',
+                                'mode': 'SerialBoard'}
 
         self.pump = WaterPumpModule(activation_channel=pump_parameters['activation_channel'],
                                     charging_time=pump_parameters['charging_time'],
-                                    discharging_time=pump_parameters['discharging_time'])
+                                    discharging_time=pump_parameters['discharging_time'],
+                                    mode=pump_parameters['mode'],
+                                    serial_string=pump_parameters['serial_string'])
 
 
     def take_a_sample(self, position, num_of_samples = 1):

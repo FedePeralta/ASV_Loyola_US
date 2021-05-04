@@ -16,10 +16,18 @@ signal.signal(signal.SIGTERM,manejador_de_senal)
 if __name__ == '__main__':
 
     # Creamos el objeto de modulo de sensores #
+
+    pump_parameters = {'activation_channel': 8,
+                       'charging_time': 6,
+                       'discharging_time': 1.2,
+                       'serial_string': 'COM5',
+                       'mode': 'SerialBoard'}
+
     modulo_de_sensores = WaterQualityModule(database_name = 'LOCAL_DATABASE.db',
                                             USB_string = 'USB1',
                                             timeout = 6,
-                                            baudrate = 115200)
+                                            baudrate = 115200,
+                                            pump_parameters=pump_parameters)
 
     while keep_going:
 
