@@ -25,4 +25,5 @@ class SerialBoard():
 	def __del__(self):
 
 		print("SerialBoard disconnected!")
+		self.serial_connection.write('L'.encode('UTF-8'))
 		self.serial_connection.close()

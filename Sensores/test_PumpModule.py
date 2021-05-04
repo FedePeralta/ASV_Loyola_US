@@ -1,5 +1,3 @@
-#
-
 import signal
 from PumpModule import WaterPumpModule
 keep_going = True
@@ -16,7 +14,7 @@ signal.signal(signal.SIGTERM,manejador_de_senal)
 if __name__ == '__main__':
 
     # Creamos el objeto de modulo de sensores #
-    bomba = WaterPumpModule(activation_channel=8, charging_time=5, discharging_time=5)
+    bomba = WaterPumpModule(serial_string = "COM5", activation_channel=8, charging_time=5, discharging_time=5, mode = 'SerialBoard')
 
     while keep_going:
 
