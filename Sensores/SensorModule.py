@@ -2,7 +2,7 @@ import serial
 import time
 import sqlite3
 from datetime import datetime
-from .PumpModule import WaterPumpModule
+from PumpModule import WaterPumpModule
 
 
 class WaterQualityModule():
@@ -40,10 +40,13 @@ class WaterQualityModule():
         """ Take num_of_samples and save the data with the given position in the database """
 
         """ Charge the pump!"""
+        print("Charging the pump")
         self.pump.charge_probe()
 
         # Iterate over the sample_nums
-        for _ in range(num_of_samples):
+        for i in range(num_of_samples):
+
+            print("Taking sample number {}".format(i))
 
             sample_adquisition_status = False  # Mientras no se tome una muestra correcta, iteramos
 
@@ -55,6 +58,7 @@ class WaterQualityModule():
                 line = self.serial.read(self.serial.in_waiting)
 
                 if line == b'':  # He leido un buffer vacio
+                    print("Waiting next frame...")
                     continue
                 else:
                     tramas = str(line)  # Pasamos a string
@@ -109,6 +113,7 @@ class WaterQualityModule():
                     self.sensor_data['LATITUD'] = position[0]
                     self.sensor_data['LONGITUD'] = position[1]
 
+                    print("Incoming data: ")
                     print(self.sensor_data)
 
                     # creamos una tupla de parámetros que nos permitirá introducir los datos en la tabla sensor
@@ -136,6 +141,7 @@ class WaterQualityModule():
                     sample_adquisition_status = True
 
         """ Discharge the pump!"""
+        print("Discharging the pump!")
         self.pump.discharge_probe()
 
         return True
