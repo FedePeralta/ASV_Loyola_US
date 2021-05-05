@@ -14,7 +14,10 @@ signal.signal(signal.SIGTERM,manejador_de_senal)
 if __name__ == '__main__':
 
     # Creamos el objeto de modulo de sensores #
-    bomba = WaterPumpModule(serial_string = "COM5", activation_channel=8, charging_time=5, discharging_time=5, mode = 'SerialBoard')
+    bomba = WaterPumpModule(serial_string = "/dev/ttyACM0",
+                            charging_time=5,
+                            discharging_time=5,
+                            mode = 'BuiltInPin')
 
     while keep_going:
 
