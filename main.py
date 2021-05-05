@@ -1,17 +1,37 @@
+import argparse
 import signal
 import time
 
 import numpy as np
 from dronekit import connect, VehicleMode, LocationGlobal
-from Sensores.SensorModule import WaterQualityModule
+
 from KMLMissionGeneration import KMLMissionGenerator
+from Sensores.SensorModule import WaterQualityModule
+
+
+def obtener_ip_puerto(file_name='/etc/default/ardurover'):
+    if DEBUG:
+        return 'tcp:127.0.0.1:5762'
+    with open(file_name, 'r') as f:
+        # Tenemos que buscar la linea TELEM4=
+        line = f.readline()
+        while line.find("TELEM4") != 0:
+            line = f.readline()
+        datos = line.split('"')
+        # este dato de abajo deberia ser algo como 'tcp:127.0.0.1:5760'
+        return datos[1][3:]
+
+
+parser = argparse.ArgumentParser(description='Main ASV file.')
+parser.add_argument('-d', '--debug', default=True, type=bool, )
+args = parser.parse_args()
 
 keep_going = True
-DEBUG = True
+DEBUG = args.debug
 
 mg = KMLMissionGenerator('MisionesLoyola.kml')
 
-loyola_wps = mg.get_mission_list()[0]
+waypoints = mg.get_mission_list()[0]
 
 
 def manejador_de_senal(_, __):
@@ -23,9 +43,9 @@ def arm(_vehicle):
     """
     Arms vehicle
     """
-    while not _vehicle.is_armable:
-        print(" Waiting for vehicle to initialize...")
-        time.sleep(1)
+    # while not _vehicle.is_armable:
+    #     print(" Waiting for vehicle to initialize...")
+    #     time.sleep(1)
 
     # Copter should arm in GUIDED mode
     _vehicle.mode = VehicleMode("GUIDED")
@@ -37,11 +57,11 @@ def arm(_vehicle):
         time.sleep(1)
 
 
-def get_next_loyola_lake_wp(_vehicle):
+def get_next_wp(_vehicle):
     global keep_going
-    nextwp = loyola_wps.pop(0)
+    nextwp = waypoints.pop(0)
     print("Next waypoint is", nextwp)
-    if len(loyola_wps) == 0:
+    if len(waypoints) == 0:
         keep_going = False
     return LocationGlobal(nextwp[1], nextwp[0], nextwp[2])
 
@@ -64,7 +84,7 @@ def reached_position(current_loc, goal_loc):
     d_lat = lat2 - lat1
     d_lon = lon2 - lon1
 
-    a = np.sin(0.5 * d_lat)**2 + np.sin(0.5 * d_lon)**2 * np.cos(lat1) * np.cos(lat2)
+    a = np.sin(0.5 * d_lat) ** 2 + np.sin(0.5 * d_lon) ** 2 * np.cos(lat1) * np.cos(lat2)
     c = 2.0 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))
     return 6378100.0 * c < 0.5
 
@@ -72,37 +92,51 @@ def reached_position(current_loc, goal_loc):
 if __name__ == '__main__':
 
     # Creamos el objeto del modulo del AutoPilot
-    vehicle = connect('tcp:127.0.0.1:5762', timeout=6, baud=115200, wait_ready=True)
-    # vehicle = connect('dev/ttyUSBO', timeout=6, baud=115200)
+    # vehicle = connect('tcp:127.0.0.1:5762', timeout=6, baud=115200, wait_ready=True)
+    vehicle = connect(obtener_ip_puerto(), timeout=15)
 
     # Creamos el objeto de modulo de sensores #
-    modulo_de_sensores = WaterQualityModule(database_name='LOCAL_DATABASE.db',
-                                            USB_string='USB1',
-                                            timeout=6,
-                                            baudrate=115200)
+    if not DEBUG:
+        modulo_de_sensores = WaterQualityModule(database_name='LOCAL_DATABASE.db',
+                                                USB_string='USB1',
+                                                timeout=6,
+                                                baudrate=115200)
     arm(vehicle)
     print("Starting mission")
 
+    # p misiones mas grandes keep_going debe bajar a false si vehicle.battery.level < 0.6
+
     while keep_going:
 
-        point2go = get_next_loyola_lake_wp(vehicle)
+        if not vehicle.armed or vehicle.mode != VehicleMode("GUIDED"):
+            break
+
+        # # Mision Objetivo 0 : Ir a waypoint
+        point2go = get_next_wp(vehicle)
         vehicle.simple_goto(point2go)
 
         while not reached_position(vehicle.location.global_relative_frame, point2go):
+            time.sleep(1)
             continue
 
+        # # Mision Objetivo 1 : Tomar muestra
         # Tomamos muestras continuamente #
         vehicle.mode = VehicleMode("LOITER")
-        print("TOMANDO MUESTRAS", len(loyola_wps))
+        print("TOMANDO MUESTRAS", len(waypoints))
 
         if DEBUG:
             time.sleep(3)
         else:
             position = vehicle.location.global_relative_frame
-            modulo_de_sensores.take_a_sample(position=[position.lat, position.lat], num_of_samples=1)
+            modulo_de_sensores.take_a_sample(position=[position.lat, position.lon], num_of_samples=1)
 
+        # # Parte de Mision Objetivo 0: Ir a waypoint
         vehicle.mode = VehicleMode("GUIDED")
         time.sleep(1)
+
+        # # Mision Objetivo 2:  Manual // Stand by
+        # vehicle.mode = VehicleMode("MANUAL")
+        # time.sleep(1)
 
     # Cerramos la conexion con el navio2
     print('FINISHING MISSION')
