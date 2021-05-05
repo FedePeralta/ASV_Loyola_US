@@ -1,5 +1,6 @@
 import os
 from time import sleep
+from ArduinoSerialBoard import SerialBoard
 
 class GPIO():
 
@@ -49,11 +50,15 @@ class GPIO():
 
 class WaterPumpModule():
 
-    def __init__(self,activation_channel=8, charging_time=5, discharging_time=5):
+    def __init__(self, serial_string="/dev/ttyUSB1", activation_channel=8, charging_time=5, discharging_time=5, mode = 'SerialBoard'):
 
         assert charging_time > 0 and discharging_time > 0, "CHARGE/DISCHARGE TIME MUST BE GREATER THAN 0!"
+        assert mode in ['SerialBoard', 'BuiltInPin'], "SerialBoard/BuiltInPin are the only permitted modes!"
 
-        self.activation_pin = GPIO(channel=activation_channel, mode='out')
+        if mode == 'BuiltInPin':
+            self.activation_pin = GPIO(channel=activation_channel, mode='out')
+        else:
+            self.activation_pin = SerialBoard(ser_path=serial_string, baudrate=9600, timeout=None)
 
         self.charging_time = charging_time
         self.discharging_time = discharging_time
