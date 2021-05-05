@@ -98,8 +98,8 @@ if __name__ == '__main__':
     # Creamos el objeto de modulo de sensores #
     if not DEBUG:
 
-        pump_parameters = {'charging_time': 6,
-                           'discharging_time': 1.2,
+        pump_parameters = {'charging_time': 7,
+                           'discharging_time': 2,
                            'serial_string': '/dev/ttyACM0',
                            'mode': 'BuiltInPin'}
 
