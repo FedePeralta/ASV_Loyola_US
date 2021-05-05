@@ -30,8 +30,7 @@ class WaterPumpModule():
         assert value in ['HIGH', 'LOW'], "THE ONLY ACCEPTED VALUES FOR set_pump_relay_value are HIGH/LOW"
 
         if self.mode == 'SerialBoard':
-            byte_msg = 'H'.encode('UTF-8') if value == 'HIGH' else 'L'.encode('UTF-8')
-            self.serial_board.write(byte_msg)
+            self.serial_board.write_gpio(value)
         else:
             val = GPIO.LOW if value == 'LOW' else GPIO.HIGH
             GPIO.output(self.activation_pin,val)
