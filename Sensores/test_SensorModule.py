@@ -20,7 +20,7 @@ if __name__ == '__main__':
     pump_parameters = {'charging_time': 6,
                        'discharging_time': 1.2,
                        'serial_string': '/dev/ttyACM0',
-                       'mode': 'SerialBoard'}
+                       'mode': 'BuiltInPin'}
 
     modulo_de_sensores = WaterQualityModule(database_name = 'LOCAL_DATABASE.db',
                                             USB_string = 'USBPort1',
