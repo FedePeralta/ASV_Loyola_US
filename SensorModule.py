@@ -9,7 +9,7 @@ class WaterQualityModule():
 
     """ Class for the water quality module sensor aka Libellium. """
 
-    def __init__(self, database_name = 'LOCAL_DATABASE.db', USB_string = 'USB1', timeout = 6, baudrate = 115200, pump_parameters = None):
+    def __init__(self, database_name = 'LOCAL_DATABASE.db', USB_string = 'USBPort1', timeout = 6, baudrate = 115200, pump_parameters = None):
 
         """ Create the serial object """
         self.serial = serial.Serial('/dev/tty' + USB_string, baudrate, timeout=timeout)
@@ -25,14 +25,12 @@ class WaterQualityModule():
 
         """ Create the Pump Module object """
         if pump_parameters is None:
-            pump_parameters = {'activation_channel': 8,
-                               'charging_time': 6,
+            pump_parameters = {'charging_time': 6,
                                'discharging_time': 1.2,
-                               'serial_string': '/dev/ttyUSB3',
-                                'mode': 'SerialBoard'}
+                               'serial_string': '/dev/ttyACM0',
+                               'mode': 'BuiltInPin'}
 
-        self.pump = WaterPumpModule(activation_channel=pump_parameters['activation_channel'],
-                                    charging_time=pump_parameters['charging_time'],
+        self.pump = WaterPumpModule(charging_time=pump_parameters['charging_time'],
                                     discharging_time=pump_parameters['discharging_time'],
                                     mode=pump_parameters['mode'],
                                     serial_string=pump_parameters['serial_string'])
@@ -42,10 +40,13 @@ class WaterQualityModule():
         """ Take num_of_samples and save the data with the given position in the database """
 
         """ Charge the pump!"""
+        print("Charging the pump")
         self.pump.charge_probe()
 
         # Iterate over the sample_nums
-        for _ in range(num_of_samples):
+        for i in range(num_of_samples):
+
+            print("Taking sample number {}".format(i))
 
             sample_adquisition_status = False  # Mientras no se tome una muestra correcta, iteramos
 
@@ -57,6 +58,7 @@ class WaterQualityModule():
                 line = self.serial.read(self.serial.in_waiting)
 
                 if line == b'':  # He leido un buffer vacio
+                    print("Waiting next frame...")
                     continue
                 else:
                     tramas = str(line)  # Pasamos a string
@@ -111,6 +113,7 @@ class WaterQualityModule():
                     self.sensor_data['LATITUD'] = position[0]
                     self.sensor_data['LONGITUD'] = position[1]
 
+                    print("Incoming data: ")
                     print(self.sensor_data)
 
                     # creamos una tupla de parámetros que nos permitirá introducir los datos en la tabla sensor
@@ -138,6 +141,7 @@ class WaterQualityModule():
                     sample_adquisition_status = True
 
         """ Discharge the pump!"""
+        print("Discharging the pump!")
         self.pump.discharge_probe()
 
         return True

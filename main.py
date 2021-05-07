@@ -97,10 +97,17 @@ if __name__ == '__main__':
 
     # Creamos el objeto de modulo de sensores #
     if not DEBUG:
+
+        pump_parameters = {'charging_time': 7,
+                           'discharging_time': 2,
+                           'serial_string': '/dev/ttyACM0',
+                           'mode': 'BuiltInPin'}
+
         modulo_de_sensores = WaterQualityModule(database_name='LOCAL_DATABASE.db',
-                                                USB_string='USB1',
+                                                USB_string='USBPort1',
                                                 timeout=6,
-                                                baudrate=115200)
+                                                baudrate=115200,
+                                                pump_parameters=pump_parameters)
     arm(vehicle)
     print("Starting mission")
 
