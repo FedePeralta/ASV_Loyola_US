@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import numpy as np
 import xml.etree.ElementTree as ElementTree
 
@@ -35,6 +34,8 @@ class KMLMissionGenerator:
         return self.missions
 
     def plot_mission(self, mission_nu=0):
+
+        import matplotlib.pyplot as plt
 
         mission = np.array(self.missions[mission_nu])
         fig, ax = plt.subplots(1, 1)

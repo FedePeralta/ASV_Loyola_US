@@ -5,6 +5,8 @@ from datetime import datetime
 from PumpModule import WaterPumpModule
 
 
+sensor_keys = ['ID','SAMPLE_NUM','BAT','WT','PH','DO','LATITUD','LONGITUD','COND','ORP','DATE']
+
 class WaterQualityModule():
 
     """ Class for the water quality module sensor aka Libellium. """
@@ -22,6 +24,9 @@ class WaterQualityModule():
 
         """ Initialize the data dictionary of the sensor measurements """
         self.sensor_data = {}
+        for key in sensor_keys:
+            self.sensor_data[key] = -1  # A -1 value indicates a faulty value #
+
 
         """ Create the Pump Module object """
         if pump_parameters is None:
@@ -46,15 +51,50 @@ class WaterQualityModule():
         # Iterate over the sample_nums
         for i in range(num_of_samples):
 
-            print("Taking sample number {}".format(i))
+            print("Taking sample {} / {}".format(i+1,num_of_samples))
 
+            self.read_frame() # Read a frame from the buffer
+
+            str_date = str(datetime.now())  # Leemos la fecha y la convertimos en string
+            # Metemos la fecha en el diccionario de variables
+            self.sensor_data['DATE'] = str_date
+
+            # Almacenamos la posicion
+            self.sensor_data['LATITUD'] = position[0]
+            self.sensor_data['LONGITUD'] = position[1]
+
+            print("Incoming data: ")
+            print(self.sensor_data)
+
+            # creamos una tupla de parametros que nos permitira introducir los datos en la tabla sensor
+            parametros = (self.sensor_data['ID'],
+                          self.sensor_data['SAMPLE_NUM'],
+                          self.sensor_data['BAT'],
+                          self.sensor_data['WT'],
+                          self.sensor_data['PH'],
+                          self.sensor_data['DO'],
+                          self.sensor_data['LATITUD'],
+                          self.sensor_data['LONGITUD'],
+                          self.sensor_data['COND'],
+                          self.sensor_data['ORP'],
+                          self.sensor_data['DATE'])
+
+            # insertamos valores en nuestra tabla "sensor"
+            self.cursor.execute(
+                "INSERT INTO sensor (ID,SAMPLE_NUM,BAT,TEMP,PH,DO,LATITUD,LONGITUD,COND,ORP,DATE) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+                parametros)
+
+            # el siguiente comando "commit()" guarda la tabla creada
+            self.database.commit()
+
+            """
             sample_adquisition_status = False  # Mientras no se tome una muestra correcta, iteramos
 
             while sample_adquisition_status is False:
 
                 time.sleep(0.5)  # Polling time. Every 0.5 secs, check the buffer #
 
-                # Leemos todo el puerto serie #
+                # Leemos el contenido del buffer de entrada #
                 line = self.serial.read(self.serial.in_waiting)
 
                 if line == b'':  # He leido un buffer vacio
@@ -84,7 +124,7 @@ class WaterQualityModule():
                     # Descartamos los dos primeros campos y el ultimo (JUNK)
                     line_str = line_str[2:-1]
 
-                    # La línea de código anterior separa los caracteres del principio de la lectura que "no tienen"
+                    # La lanea de caodigo anterior separa los caracteres del principio de la lectura que "no tienen"
                     # importancia en la lectura de los sensores
                     # Se han identificado y separado las partes que interesan de la cadena,
                     # es decir, se intenta eliminar
@@ -116,7 +156,7 @@ class WaterQualityModule():
                     print("Incoming data: ")
                     print(self.sensor_data)
 
-                    # creamos una tupla de parámetros que nos permitirá introducir los datos en la tabla sensor
+                    # creamos una tupla de parametros que nos permitira introducir los datos en la tabla sensor
                     parametros = (self.sensor_data['ID'],
                                   self.sensor_data['SAMPLE_NUM'],
                                   self.sensor_data['BAT'],
@@ -139,12 +179,51 @@ class WaterQualityModule():
 
                     # Marcamos el flag de muestra guardada con exito
                     sample_adquisition_status = True
+                    
+                    """
 
         """ Discharge the pump!"""
         print("Discharging the pump!")
         self.pump.discharge_probe()
 
-        return True
+        return self.sensor_data # Return the last readed value #
+
+    def read_frame(self):
+
+        is_frame_ok = False # While a frame hasnt correctly readed #
+        self.serial.reset_input_buffer() # Erase the input buffer to start listening
+
+        while not is_frame_ok:
+
+            time.sleep(0.5)  # Polling time. Every 0.5 secs, check the buffer #
+
+            if self.serial.in_waiting == 0: # If there is none to read, continue
+                continue
+            else:
+
+                bytes = self.serial.read_all() # Read all the buffer #
+
+                bytes = bytes.decode('ascii','ignore') # Convert to ASCII and ignore non readible characters
+
+                frames = bytes.split('<=>') # Frame separator
+
+                last_frame = frames[-1].split('#') # Select the last frame
+                print(last_frame)
+
+                for field in last_frame: # Iterate over the frame fields
+
+                    data = field.split(':')
+                    if len(data) < 2:
+                        # This is not a data field #
+                        pass
+                    else:
+                        # This is a data field #
+                        sensor_str = data[0]
+                        sensor_val = float(data[1])
+                        if sensor_str in sensor_keys: # The sensor is in the available sensors #
+                            self.sensor_data[sensor_str] = sensor_val # Update the sensor_data dict
+
+                is_frame_ok = True
 
     def close(self):
 
