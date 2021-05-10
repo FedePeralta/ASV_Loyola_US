@@ -6,7 +6,7 @@ import numpy as np
 from dronekit import connect, VehicleMode, LocationGlobal
 
 from KMLMissionGeneration import KMLMissionGenerator
-from Sensores.SensorModule import WaterQualityModule
+from SensorModule import WaterQualityModule
 
 
 def obtener_ip_puerto(file_name='/etc/default/ardurover'):
