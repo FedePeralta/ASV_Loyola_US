@@ -22,12 +22,8 @@ def obtener_ip_puerto(file_name='/etc/default/ardurover'):
         return datos[1][3:]
 
 
-parser = argparse.ArgumentParser(description='Main ASV file.')
-parser.add_argument('-d', '--debug', default=True, type=bool, )
-args = parser.parse_args()
-
 keep_going = True
-DEBUG = args.debug
+DEBUG = True
 
 mg = KMLMissionGenerator('MisionesLoyola.kml')
 

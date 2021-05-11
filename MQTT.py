@@ -3,8 +3,8 @@ import threading
 import paho.mqtt.client as mqtt
 
 
-class Sender(object):
-    def __init__(self, name, addr='127.0.0.1', port=1883, timeout=60, topics2suscribe=None):
+class MQTT(object):
+    def __init__(self, name, addr='127.0.0.1', port=1883, timeout=60, topics2suscribe=None, on_message=None):
 
         self.client = mqtt.Client(name)
 
@@ -12,6 +12,10 @@ class Sender(object):
             topics2suscribe = []
         self.topics2suscribe = topics2suscribe
 
+        if on_message is None:
+            self.onmessage = self.on_message
+        else:
+            self.onmessage = on_message
         # Con esto se puede mejorar la seguridad del MQTT si el broker esta configurado para eso
         # self.client.username_pw_set("", "")
 
@@ -20,7 +24,7 @@ class Sender(object):
 
     def mqtt_thread(self, addr='127.0.0.1', port=1883, timeout=60):
         self.client.on_connect = self.on_connect
-        self.client.on_message = self.on_message
+        self.client.on_message = self.onmessage
         self.client.connect(addr, port, timeout)
         self.client.loop_forever()
 
@@ -29,10 +33,10 @@ class Sender(object):
         for topic in self.topics2suscribe:
             self.client.subscribe(topic)
 
-    def on_message(self, _client, user_data, msg):
+    @staticmethod
+    def on_message(_client, user_data, msg):
         message = bool(msg.payload)
-        if msg.topic == "step":
-            self.step = message
+        print(message)
 
     def send_new_acq_msg(self, acq_f):
         while not self.client.is_connected():

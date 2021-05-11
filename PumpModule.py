@@ -3,7 +3,6 @@ from time import sleep
 from ArduinoSerialBoard import SerialBoard
 import RPi.GPIO as GPIO
 
-
 class WaterPumpModule():
 
     def __init__(self, serial_string="/dev/ttyACM0",  charging_time=5, discharging_time=5, mode='BuiltInPin'):
