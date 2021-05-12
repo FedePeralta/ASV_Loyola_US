@@ -1,6 +1,5 @@
 # General Roadmap
 * Configuration File
-* Controlar alto nivel desde MQTT
 * Controlar multiples vehiculos desde MQTT
 * Generar como librería de python
 
@@ -24,7 +23,3 @@
       /kml_files
          /MisionesLoyola.kml
          /Misiones_Dron_US_Loyola_2.kml
-         
-* Conectar con MQTT
-
-      Crear conexión de forma autónoma.

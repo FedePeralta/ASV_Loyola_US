@@ -145,6 +145,10 @@ def str2bool(v):
 
 
 def change_asv_current_mode(desired_mode):
+    """
+    Permite cambiar el modo del ASV
+    :return: bool: si el cambio se ha realizado
+    """
     global current_asv_mode
     if current_asv_mode != desired_mode:
         current_asv_mode = desired_mode
@@ -197,7 +201,10 @@ def move2wp():
 
     vehicle.mode = VehicleMode("LOITER")
     if verbose > 0:
-        print("TOMANDO MUESTRAS, quedan: ", len(waypoints), "waypoints")
+        if current_asv_mode == 1:
+            print("TOMANDO MUESTRAS, quedan: ", len(waypoints), "waypoints")
+        else:
+            print("TOMANDO MUESTRAS")
 
     if DEBUG:
         time.sleep(3)
@@ -230,16 +237,17 @@ def on_message(_client, _, msg):
 
 if __name__ == '__main__':
 
+    # para agilizar el inicio del script en modo DEBUG o RELEASE
     parser = argparse.ArgumentParser(description='Main ASV file.')
     parser.add_argument('-d', '--debug', default=True, type=str2bool,
                         help="Deactivates DEBUG mode if -d no, false, f, n or 0.")
     args = parser.parse_args()
-
     DEBUG = args.debug
-    received_mqtt_wp = [0, 0, 0]
-    asv_mode = 0  # el modo deseado
-    current_asv_mode = -1  # el modo actual
-    asv_mode_strs = ["STANDBY", "GUIDED", "MANUAL", "SIMPLE", "RTL"]
+
+    received_mqtt_wp = [0, 0, 0]  # Inicializando objeto de wp desde el servidor
+    asv_mode = 0  # el modo del ASV deseado
+    current_asv_mode = -1  # el modo del ASV actual
+    asv_mode_strs = ["STANDBY", "GUIDED", "MANUAL", "SIMPLE", "RTL"]  # Strings para modos
 
     mqtt = MQTT("1", addr='52.232.74.235', topics2suscribe=["veh1"], on_message=on_message)
 
@@ -257,9 +265,9 @@ if __name__ == '__main__':
     mg = KMLMissionGenerator('MisionesLoyola.kml')
     waypoints = mg.get_mission_list()[0]
 
-    # Creamos el objeto del modulo del AutoPilot
-    # vehicle = connect('tcp:127.0.0.1:5762', timeout=6, baud=115200, wait_ready=True)
     try:
+        # Creamos el objeto del modulo del AutoPilot
+        # vehicle = connect('tcp:127.0.0.1:5762', timeout=6, baud=115200, wait_ready=True)
         vehicle = connect(vehicle_ip, timeout=15)
         # Creamos el objeto de modulo de sensores #
         if DEBUG:
@@ -276,6 +284,8 @@ if __name__ == '__main__':
                                                     timeout=6,
                                                     baudrate=115200,
                                                     pump_parameters=pump_parameters)
+
+        # creamos el hilo que continuamente envia datos de posicion al servidor
         threading.Thread(target=asv_send_info, ).start()
     except ConnectionRefusedError:
         keep_going = False
