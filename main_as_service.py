@@ -1,6 +1,7 @@
 import argparse
 import json
 import signal
+import threading
 import time
 from math import atan2
 
@@ -35,6 +36,20 @@ def obtener_ip_puerto(file_name='/etc/default/ardurover'):
 def manejador_de_senal(_, __):
     global keep_going
     keep_going = False
+
+
+def asv_send_info():
+    while keep_going:
+        msg = json.dumps({
+            "Latitude": vehicle.location.global_relative_frame.lat,
+            "Longitude": vehicle.location.global_relative_frame.lon,
+            "yaw": vehicle.attitude.yaw,
+            "veh_num": 1,
+            "battery": vehicle.battery.level,
+            "armed": vehicle.armed
+        })
+        mqtt.send_new_msg(msg)
+        time.sleep(0.5)
 
 
 def arm(_vehicle):
@@ -261,6 +276,7 @@ if __name__ == '__main__':
                                                     timeout=6,
                                                     baudrate=115200,
                                                     pump_parameters=pump_parameters)
+        threading.Thread(target=asv_send_info, ).start()
     except ConnectionRefusedError:
         keep_going = False
         if verbose > 0:

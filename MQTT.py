@@ -38,7 +38,7 @@ class MQTT(object):
         message = bool(msg.payload)
         print(message)
 
-    def send_new_acq_msg(self, acq_f):
+    def send_new_msg(self, msg, topic="coordinator"):
         while not self.client.is_connected():
             continue
-        self.client.publish("params", acq_f)
+        self.client.publish(topic, msg)
