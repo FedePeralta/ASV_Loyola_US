@@ -1,10 +1,8 @@
 # General Roadmap
-* Configuration File
-* Controlar multiples vehiculos desde MQTT
 * Generar como librería de python
 
 ## Specific Roadmap
-* Crear archivo de configuración: el que va a ser leido de forma inicial por el main.py. Este debe contener toda la información parametrizada: como nombres de puertos, timeouts, nombres de topicos, numero de identificacion, verbose, logger data, etc.
+* Mejorar el archivo de configuración: para generar logs, etc.
 
 * Volver a utilizar folders para mejorar presentación de la libreía:
 

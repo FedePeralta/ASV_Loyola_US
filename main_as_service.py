@@ -1,4 +1,5 @@
 import argparse
+import configparser
 import json
 import signal
 import threading
@@ -14,9 +15,6 @@ from MQTT import MQTT
 from SensorModule import WaterQualityModule
 
 
-verbose = 1
-
-
 def obtener_ip_puerto(file_name='/etc/default/ardurover'):
     """
     Reads from the file 'file_name', allegedly the Ardupilot config file, to find the TELEM4 connection string
@@ -28,18 +26,18 @@ def obtener_ip_puerto(file_name='/etc/default/ardurover'):
         The connection string for Dronekit to create a connection.
     """
 
-    if DEBUG: # In debug mode, return the std connection string.
-        return 'tcp:127.0.0.1:5762'
+    if DEBUG:  # In debug mode, return the std connection string.
+        return 'tcp:127.0.0.1:5760'
 
     with open(file_name, 'r') as f:
         # Look for TELEM4= line
         line = f.readline()
-        while line.find("TELEM4") != 0 or len(line) == 0:
+        while line.find(config['ASV']['navio2']) != 0 or len(line) == 0:
             line = f.readline()
 
         # If there is not defined, raise an error
         if len(line) == 0:
-            raise EOFError("Reached EOF without obtaining TELEM4 in file.")
+            raise EOFError(f"Reached EOF without obtaining {config['ASV']['navio2']} in file.")
         datos = line.split('"')
 
         # Return the data. It must be similar to: 'tcp:127.0.0.1:5760'
@@ -69,7 +67,7 @@ def asv_send_info():
             "Latitude": vehicle.location.global_relative_frame.lat,
             "Longitude": vehicle.location.global_relative_frame.lon,
             "yaw": vehicle.attitude.yaw,
-            "veh_num": 1,
+            "veh_num": vehicle_id,
             "battery": vehicle.battery.level,
             "armed": vehicle.armed
         })  # Must be a JSON format file.
@@ -88,13 +86,7 @@ def arm(_vehicle):
     """
     # Copter should arm in GUIDED mode
     _vehicle.mode = VehicleMode("GUIDED")
-    _vehicle.armed = True  # TODO: No es mas adecuado usar _vehicle.arm(). El while abajo no sirve (?)
-
-    # Confirm vehicle armed before attempting to take off
-    while not _vehicle.armed:
-        if verbose > 0:
-            print(" Waiting for arming...")
-        time.sleep(1)
+    _vehicle.arm()
 
 
 def get_next_wp(_vehicle):
@@ -109,13 +101,13 @@ def get_next_wp(_vehicle):
         Returns the next waypoint as a `dronekit.LocationGlobal object.
     """
 
-    global keep_going  # TODO: Es esto necesario?
-    global received_mqtt_wp # TODO: Revisar esto. Creo que es necesario ponerlo como global. Ver más abajo.
+    # global received_mqtt_wp  solo en escritura es útil poner una variable como global, para lectura no es necesario
+    # https://stackoverflow.com/questions/423379/using-global-variables-in-a-function
 
     if current_asv_mode == 1:  # Preloaded
         nextwp = waypoints.pop(0)
     elif current_asv_mode == 3:
-        nextwp = received_mqtt_wp # TODO: Atención. Esto esta en un scope superior. No deberíamos ponerlo como global (?)
+        nextwp = received_mqtt_wp
     else:
         raise ValueError(f"Current ASV Mode should be 1: {asv_mode_strs[1]} or 3: {asv_mode_strs[3]}.")
     if verbose > 0:
@@ -185,7 +177,7 @@ def reached_position(current_loc, goal_loc):
     # Returns True if the waypoint is within 1.5 meters the ASV position
     a = np.sin(0.5 * d_lat) ** 2 + np.sin(0.5 * d_lon) ** 2 * np.cos(lat1) * np.cos(lat2)
     c = 2.0 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))
-    return 6378100.0 * c < 1.5
+    return 6378100.0 * c < 0.5
 
 
 def str2bool(v):
@@ -316,9 +308,9 @@ def move2wp():
         position = vehicle.location.global_relative_frame
         modulo_de_sensores.take_a_sample(position=[position.lat, position.lon], num_of_samples=1)
 
-    vehicle.mode = VehicleMode("GUIDED") # Return to GUIDED to pursue the next waypoint
+    vehicle.mode = VehicleMode("GUIDED")  # Return to GUIDED to pursue the next waypoint
 
-    time.sleep(1) # Wait a second to be sure the vehicle mode is changed.
+    time.sleep(1)  # Wait a second to be sure the vehicle mode is changed.
 
     return True
 
@@ -334,12 +326,12 @@ def on_message(_client, _, msg):
     """
 
     global asv_mode, received_mqtt_wp
-    if msg.topic == "veh1": # TODO: Este identificador tiene que cambiar para cada dron. Debería leerse de un archivo de configuracion unico para cada vehiculo.
-        message = json.loads(msg.payload.decode('utf-8')) # Decode the msg into UTF-8
+    if msg.topic == f"veh{vehicle_id}":
+        message = json.loads(msg.payload.decode('utf-8'))  # Decode the msg into UTF-8
 
         if verbose > 0:
             print(f"Received {message} on topic {msg.topic}")
-        if message["mission_type"] == "STANDBY": # Change the asv mission mode flag
+        if message["mission_type"] == "STANDBY":  # Change the asv mission mode flag
             asv_mode = 0
         elif message["mission_type"] == "GUIDED":
             asv_mode = 1
@@ -354,21 +346,21 @@ def on_message(_client, _, msg):
 
 if __name__ == '__main__':
 
-    # para agilizar el inicio del script en modo DEBUG o RELEASE
-    parser = argparse.ArgumentParser(description='Main ASV file.')
-    parser.add_argument('-d', '--debug', default=True, type=str2bool,
-                        help="Deactivates DEBUG mode if -d no, false, f, n or 0.")
-    args = parser.parse_args()
-    DEBUG = args.debug
+    config = configparser.ConfigParser()
+    config.read('ASV_DRONE_1.conf')
+    verbose = int(config['ASV']['verbose'])
+
+    DEBUG = str2bool(config['ASV']['DEBUG'])
+    vehicle_id = config['ASV']['id']
+    mqtt_addr = config['MQTT']['broker_ip']
+    default_mission_filename = config['ASV']['default_mission']
 
     received_mqtt_wp = [0, 0, 0]  # Inicializando objeto de wp desde el servidor
     asv_mode = 0  # el modo del ASV deseado
     current_asv_mode = -1  # el modo del ASV actual
 
     asv_mode_strs = ["STANDBY", "GUIDED", "MANUAL", "SIMPLE", "RTL"]  # Strings para modos
-
-    # TODO: Cuidado con esto. Debería leerse el addr de un archivo de configuracion del ASV por si cambia
-    mqtt = MQTT("1", addr='52.232.74.235', topics2suscribe=["veh1"], on_message=on_message)
+    mqtt = MQTT(vehicle_id, addr=mqtt_addr, topics2suscribe=[f"veh{vehicle_id}"], on_message=on_message)
 
     vehicle_ip = obtener_ip_puerto()
 
@@ -381,27 +373,24 @@ if __name__ == '__main__':
     keep_going = True
     signal.signal(signal.SIGTERM, manejador_de_senal)
 
-    mg = KMLMissionGenerator('MisionesLoyola.kml')
+    mg = KMLMissionGenerator(default_mission_filename)
     waypoints = mg.get_mission_list()[0]
 
     try:
         # Creamos el objeto del modulo del AutoPilot
         # vehicle = connect('tcp:127.0.0.1:5762', timeout=6, baud=115200, wait_ready=True)
-        vehicle = connect(vehicle_ip, timeout=15)
+        vehicle = connect(vehicle_ip, timeout=int(config['ASV']['timeout']))
         # Creamos el objeto de modulo de sensores #
         if DEBUG:
             vehicle.groundspeed = 1.0
             modulo_de_sensores = False
         else:
-            pump_parameters = {'charging_time': 7,
-                               'discharging_time': 2,
-                               'serial_string': '/dev/ttyACM0',
-                               'mode': 'BuiltInPin'}
+            pump_parameters = json.loads(config['WATER']['pump_parameters'])
 
-            modulo_de_sensores = WaterQualityModule(database_name='LOCAL_DATABASE.db',
-                                                    USB_string='USBPort1',
-                                                    timeout=6,
-                                                    baudrate=115200,
+            modulo_de_sensores = WaterQualityModule(database_name=config['WATER']['database_name'],
+                                                    USB_string=config['WATER']['USB_string'],
+                                                    timeout=int(config['WATER']['timeout']),
+                                                    baudrate=int(config['WATER']['baudrate']),
                                                     pump_parameters=pump_parameters)
 
         # creamos el hilo que continuamente envia datos de posicion al servidor
@@ -428,7 +417,9 @@ if __name__ == '__main__':
                 if verbose > 0:
                     print(f"Finished preloaded mission.")
                     print("Setting mode to Stand-by.")
+                    print("Resetting mission list.")
                 asv_mode = 0
+                waypoints = mg.get_mission_list()[0]
                 continue
 
             if move2wp():

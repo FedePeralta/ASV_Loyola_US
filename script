@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo python3 main_as_service.py -d f &
+sudo python3 main_as_service.py &
