@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
-<Document>
-	<name>MisionesLoyola</name>
-	<gx:CascadingStyle kml:id="__managed_style_2FC737D9D21A255846E1">
+<Document id="1bHvsDXWDeGHrj7LB4vCkTyAJSGz3mZw2">
+	<name>Misiones Dron US-Loyola</name>
+	<description>Conjunto de misiones precargadas
+para el testeo de los drones.</description>
+	<gx:CascadingStyle kml:id="__managed_style_2CAC53A49E1AF73CBDAC">
 		<Style>
 			<IconStyle>
 				<scale>1.2</scale>
@@ -21,44 +23,10 @@
 				<color>40ffffff</color>
 			</PolyStyle>
 			<BalloonStyle>
-				<displayMode>hide</displayMode>
 			</BalloonStyle>
 		</Style>
 	</gx:CascadingStyle>
-	<StyleMap id="__managed_style_0796CEBBF41A255846E1">
-		<Pair>
-			<key>normal</key>
-			<styleUrl>#__managed_style_16758B56E71A255846E1</styleUrl>
-		</Pair>
-		<Pair>
-			<key>highlight</key>
-			<styleUrl>#__managed_style_2FC737D9D21A255846E1</styleUrl>
-		</Pair>
-	</StyleMap>
-	<gx:CascadingStyle kml:id="__managed_style_217AFFBD8A1A25573082">
-		<Style>
-			<IconStyle>
-				<scale>1.2</scale>
-				<Icon>
-					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
-				</Icon>
-				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
-			</IconStyle>
-			<LabelStyle>
-			</LabelStyle>
-			<LineStyle>
-				<color>ff2f2fd3</color>
-				<width>6</width>
-			</LineStyle>
-			<PolyStyle>
-				<color>40ffffff</color>
-			</PolyStyle>
-			<BalloonStyle>
-				<displayMode>hide</displayMode>
-			</BalloonStyle>
-		</Style>
-	</gx:CascadingStyle>
-	<gx:CascadingStyle kml:id="__managed_style_16758B56E71A255846E1">
+	<gx:CascadingStyle kml:id="__managed_style_12A00A9EAA1AF73CBDAC">
 		<Style>
 			<IconStyle>
 				<Icon>
@@ -76,96 +44,54 @@
 				<color>40ffffff</color>
 			</PolyStyle>
 			<BalloonStyle>
-				<displayMode>hide</displayMode>
 			</BalloonStyle>
 		</Style>
 	</gx:CascadingStyle>
-	<gx:CascadingStyle kml:id="__managed_style_194B5111E51A25573082">
-		<Style>
-			<IconStyle>
-				<Icon>
-					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
-				</Icon>
-				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
-			</IconStyle>
-			<LabelStyle>
-			</LabelStyle>
-			<LineStyle>
-				<color>ff2f2fd3</color>
-				<width>4</width>
-			</LineStyle>
-			<PolyStyle>
-				<color>40ffffff</color>
-			</PolyStyle>
-			<BalloonStyle>
-				<displayMode>hide</displayMode>
-			</BalloonStyle>
-		</Style>
-	</gx:CascadingStyle>
-	<StyleMap id="__managed_style_033F8C9D001A25573082">
+	<StyleMap id="__managed_style_06A3CC36DA1AF73CBDAC">
 		<Pair>
 			<key>normal</key>
-			<styleUrl>#__managed_style_194B5111E51A25573082</styleUrl>
+			<styleUrl>#__managed_style_12A00A9EAA1AF73CBDAC</styleUrl>
 		</Pair>
 		<Pair>
 			<key>highlight</key>
-			<styleUrl>#__managed_style_217AFFBD8A1A25573082</styleUrl>
+			<styleUrl>#__managed_style_2CAC53A49E1AF73CBDAC</styleUrl>
 		</Pair>
 	</StyleMap>
-	<Placemark id="038FFB9F191A2556F1A8">
-		<name>Mision1</name>
+	<Placemark id="091E9B790C1AF73CBDAB">
+		<name>MisionDron1</name>
 		<LookAt>
-			<longitude>-5.940283471256183</longitude>
-			<latitude>37.3074673826133</latitude>
-			<altitude>31.15054921144184</altitude>
+			<longitude>-5.940314331353271</longitude>
+			<latitude>37.30747587731933</latitude>
+			<altitude>32.74221064569676</altitude>
 			<heading>0</heading>
 			<tilt>0</tilt>
 			<gx:fovy>35</gx:fovy>
-			<range>24.99758558309622</range>
+			<range>64.13515817960615</range>
 			<altitudeMode>absolute</altitudeMode>
 		</LookAt>
-		<styleUrl>#__managed_style_033F8C9D001A25573082</styleUrl>
+		<styleUrl>#__managed_style_06A3CC36DA1AF73CBDAC</styleUrl>
 		<LineString>
 			<coordinates>
-				-5.940282292580786,37.30752847965812,31.14904331822171 -5.940201847823071,37.30744621271428,31.14906915253077 -5.940304318197796,37.30730377896142,31.15792694518453 -5.940199932421594,37.30744545092469,31.14907868160238 -5.940048619594346,37.30744925935799,31.14905889915918 -5.940198974747064,37.3074454509665,31.14906931521534 -5.940275852101927,37.3075220003937,31.1505527381603 
+				-5.940281890136129,37.30749065442781,32.58958753885346 -5.940124627043851,37.30741258101723,32.39280216606657 -5.940279253665587,37.3074940280334,32.5834484033453 -5.940125970954902,37.30740941311091,32.39786464521559 -5.94028605436499,37.30748474940263,32.59761230872456 -5.940120449087908,37.30741836739082,32.38629891845109 -5.940276915582709,37.30749770416943,32.57998338619258 -5.940117920375549,37.30742255461608,32.38082855372934
 			</coordinates>
 		</LineString>
 	</Placemark>
-	<Placemark id="0F5270A5A91A255846E0">
-		<name>Mision2</name>
+	<Placemark id="02314AA1061AF73DA616">
+		<name>MisionDron2</name>
 		<LookAt>
-			<longitude>-5.940095423428894</longitude>
-			<latitude>37.30751126655251</latitude>
-			<altitude>32.3166635060209</altitude>
-			<heading>0</heading>
-			<tilt>0</tilt>
+			<longitude>-5.939827096190386</longitude>
+			<latitude>37.30761826391416</latitude>
+			<altitude>32.6783791027629</altitude>
+			<heading>3.050650729151086</heading>
+			<tilt>8.413803458014172</tilt>
 			<gx:fovy>35</gx:fovy>
-			<range>77.58411665690801</range>
+			<range>37.81682317179275</range>
 			<altitudeMode>absolute</altitudeMode>
 		</LookAt>
-		<styleUrl>#__managed_style_0796CEBBF41A255846E1</styleUrl>
+		<styleUrl>#__managed_style_06A3CC36DA1AF73CBDAC</styleUrl>
 		<LineString>
 			<coordinates>
-				-5.940234386387234,37.3074524329031,31.12928004774791 -5.940163657142153,37.30743286991233,31.11192163852661 -5.940080886199154,37.30744527381848,31.11191636330274 -5.940013113890449,37.30748295702562,31.13788232802259 -5.939955034806257,37.30752297324494,31.15386068124275 -5.939907632573068,37.30756350702078,31.1891795330189 -5.939868711801493,37.3076054629619,31.15271489384569 -5.939834521471435,37.30766165806751,31.21514174467655 -5.939835137851952,37.30770558007317,31.16210454619921 -5.939848935095899,37.30774329080531,31.14066937917432 -5.939802169815751,37.30774897709361,31.15704386648294 -5.939776990293644,37.30771656669473,31.15054443841814 -5.939807563874541,37.30767894533511,31.11418031850153 -5.93983392311652,37.30766118391677,31.21309025552072 -5.939868710286015,37.30760498537734,31.154733408962 -5.939905834953275,37.30756303044053,31.18918415750451 -5.939954440799513,37.30752201772177,31.15089432199187 -5.940014431826769,37.30748289884873,31.1348356931337 -5.940082267712407,37.30744470679626,31.11191174023177 -5.940163799465557,37.3074318344721,31.111907567019 -5.940224377760646,37.30747572492296,31.11222630286429 
-			</coordinates>
-		</LineString>
-	</Placemark>
-	<Placemark id="0FCB17869E1A25589DD8">
-		<name>Mision3</name>
-		<LookAt>
-			<longitude>-5.940095423428894</longitude>
-			<latitude>37.30751126655251</latitude>
-			<altitude>32.3166635060209</altitude>
-			<heading>0</heading>
-			<tilt>0</tilt>
-			<gx:fovy>35</gx:fovy>
-			<range>77.58411665690801</range>
-			<altitudeMode>absolute</altitudeMode>
-		</LookAt>
-		<styleUrl>#__managed_style_0796CEBBF41A255846E1</styleUrl>
-		<LineString>
-			<coordinates>
-				-5.940287262241679,37.30748766303158,31.15054952973773 -5.940244769396706,37.30749862427608,31.11283603329979 -5.940198587302098,37.30749767003992,31.11192059310145 -5.940148230780685,37.30748477623213,31.07329551704065 -5.940108621450769,37.30745997130816,31.09610220407824 -5.940087026391778,37.30742944910485,31.1119173648738 -5.940102618231927,37.30740372735711,31.1412402195107 -5.94014398259762,37.30739658746404,31.15055403822218 -5.940188377802952,37.30740751838451,31.12294680974765 -5.940230363073872,37.3074304110048,31.11953769384104 -5.940277070765746,37.30745094663965,31.15054020296084 -5.940301050648536,37.30746858952983,31.15054906856235 
+				-5.940069363002407,37.30743928431436,32.4202665108089 -5.940017521313406,37.30747413509041,32.43527825316885 -5.939961384717374,37.30751301850473,32.5373437148081 -5.939921303376787,37.30754896871425,32.56365187165835 -5.939884976212431,37.30758890102797,32.6453395183398 -5.939852487851219,37.30763037089871,32.41902355404265 -5.939826731278944,37.30767119840581,32.3280338146703 -5.939804887708132,37.30771996658407,32.64122599382432 -5.939837367182842,37.30764862662088,32.39013422830999 -5.939868915715708,37.30760668350425,32.59221237934658 -5.939902338998559,37.30756697745869,32.61292798546361 -5.939943473396648,37.30752748792272,32.56604704398399 -5.939988897751245,37.30749236994265,32.47668101399432 -5.940041164983977,37.30745783312168,32.42796517168726 -5.940085388754403,37.30742940183464,32.41718189826911 -5.940027534648836,37.30746544978669,32.4360780628364 -5.939972833073157,37.30750368160728,32.56906353978875 -5.939910809394284,37.30755797948933,32.59314982864471 -5.93987497752746,37.30759867338763,32.649508354193 -5.939844498905255,37.30763888275747,32.41192184932476 -5.939818434798702,37.3076878845668,32.47136799778464 -5.939811092407476,37.30770592913245,32.57438288230607
 			</coordinates>
 		</LineString>
 	</Placemark>
