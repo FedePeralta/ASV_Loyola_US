@@ -18,7 +18,7 @@ sudo nano /etc/systemd/system/asv_service.service
         [Service]
         User=pi
         WorkingDirectory=/home/pi/ASV_Loyola_US/
-        ExecStart=/urs/bin/python3 main_as_service.py &
+        ExecStart=/usr/bin/python3 main_as_service.py &
         TimeoutStopSec=10
         Restart=on-failure
         RestartSec=5
