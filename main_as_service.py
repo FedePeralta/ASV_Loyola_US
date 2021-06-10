@@ -306,7 +306,11 @@ def move2wp():
     else:
         # If not in Debugging, take a sample using the Sensor Module#
         position = vehicle.location.global_relative_frame
-        modulo_de_sensores.take_a_sample(position=[position.lat, position.lon], num_of_samples=1)
+
+        if SENSOR:
+            modulo_de_sensores.take_a_sample(position=[position.lat, position.lon], num_of_samples=1)
+        else:
+            time.sleep(1.5)  # Sleep for a second
 
     vehicle.mode = VehicleMode("GUIDED")  # Return to GUIDED to pursue the next waypoint
 
@@ -351,6 +355,7 @@ if __name__ == '__main__':
     verbose = int(config['ASV']['verbose'])
 
     DEBUG = str2bool(config['ASV']['DEBUG'])
+    SENSOR = str2bool(config['ASV']['SENSOR'])
     vehicle_id = config['ASV']['id']
     mqtt_addr = config['MQTT']['broker_ip']
     default_mission_filename = config['ASV']['default_mission']
@@ -384,7 +389,7 @@ if __name__ == '__main__':
         if DEBUG:
             vehicle.groundspeed = 1.0
             modulo_de_sensores = False
-        else:
+        elif SENSOR:
             pump_parameters = json.loads(config['WATER']['pump_parameters'])
 
             modulo_de_sensores = WaterQualityModule(database_name=config['WATER']['database_name'],
@@ -392,6 +397,8 @@ if __name__ == '__main__':
                                                     timeout=int(config['WATER']['timeout']),
                                                     baudrate=int(config['WATER']['baudrate']),
                                                     pump_parameters=pump_parameters)
+        else:
+            modulo_de_sensores = False
 
         # creamos el hilo que continuamente envia datos de posicion al servidor
         threading.Thread(target=asv_send_info, ).start()
@@ -461,6 +468,6 @@ if __name__ == '__main__':
     except NameError:
         pass
 
-    # Cerramos la conexion con los sensores #
-    if not DEBUG:
+    # Cerramos la conexion con los sensores si existen#
+    if not DEBUG and SENSOR:
         modulo_de_sensores.close()
