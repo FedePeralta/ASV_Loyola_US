@@ -1,5 +1,3 @@
-{::options parse_block_html="true" /}
-
 # Tutorial para crear y ejecutar el programa principal como servicio
 
 Optimizado para versión de prueba (no como librería de python)
@@ -10,7 +8,7 @@ sudo nano /etc/systemd/system/asv_service.service
 ```
 * Paso 2: Llenar el documento :
 
-> :warning: Verificar si User y WorkingDirectory coinciden!
+> :warning::warning: Verificar si User y WorkingDirectory coinciden! :warning::warning:
 
         [Unit]
         Description=ASV Loyola-US dronekit controller Service
