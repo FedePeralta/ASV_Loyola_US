@@ -10,8 +10,7 @@ sudo nano /etc/systemd/system/asv_service.service
 ```
 * Paso 2: Llenar el documento :
 
-Verificar si User y WorkingDirectory coinciden!
-{: .alert .alert-danger}
+> :warning: Verificar si User y WorkingDirectory coinciden!
 
         [Unit]
         Description=ASV Loyola-US dronekit controller Service
