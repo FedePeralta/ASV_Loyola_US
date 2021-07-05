@@ -308,7 +308,10 @@ def move2wp():
         position = vehicle.location.global_relative_frame
 
         if SENSOR:
-            modulo_de_sensores.take_a_sample(position=[position.lat, position.lon], num_of_samples=1)
+            reads = modulo_de_sensores.take_a_sample(position=[position.lat, position.lon], num_of_samples=3)
+            for read in reads:
+                mqtt.send_new_msg(read, "database")  # Send the MQTT message
+                time.sleep(0.1)
         else:
             time.sleep(1.5)  # Sleep for a second
 
@@ -409,54 +412,59 @@ if __name__ == '__main__':
 
     # p misiones mas grandes keep_going debe bajar a false si vehicle.battery.level < 0.6
     while keep_going:
-        if asv_mode == 0:  # Stand By
-            if change_asv_current_mode(asv_mode):
-                if vehicle.armed:
-                    vehicle.disarm()
-                if verbose > 0:
-                    print("ASV is armed." if vehicle.armed else "ASV is disarmed. Standing By.")
-            time.sleep(1)
-        elif asv_mode == 1:  # Pre-loaded Mission
-            if verbose > 0 and change_asv_current_mode(asv_mode):
-                print("Starting Pre-loaded Mission.")
-
-            if len(waypoints) == 0:
-                if verbose > 0:
-                    print(f"Finished preloaded mission.")
-                    print("Setting mode to Stand-by.")
-                    print("Resetting mission list.")
-                asv_mode = 0
-                waypoints = mg.get_mission_list()[0]
-                continue
-
-            if move2wp():
-                time.sleep(1)
-
-        elif asv_mode == 2:  # Manual Mode
-            if change_asv_current_mode(asv_mode):
-                if vehicle.mode != VehicleMode("MANUAL"):
-                    vehicle.mode = VehicleMode("MANUAL")
-                if verbose > 0:
-                    print(f"Vehicle is now in {vehicle.mode}")
-            else:
-                time.sleep(1)
-
-        elif asv_mode == 3:  # Simple Go-To
-            if change_asv_current_mode(asv_mode):
-                if move2wp():
+        try:
+            if asv_mode == 0:  # Stand By
+                if change_asv_current_mode(asv_mode):
+                    if vehicle.armed:
+                        vehicle.disarm()
                     if verbose > 0:
-                        print("Finished simple goto.")
-                        print("Setting mode to Stand-by.")
-                    asv_mode = 0
-
-        elif asv_mode == 4:  # RTL
-            if change_asv_current_mode(asv_mode):
-                if vehicle.mode != VehicleMode("RTL"):
-                    vehicle.mode = VehicleMode("RTL")
-                if verbose > 0:
-                    print(f"Vehicle is now in {vehicle.mode}")
-            else:
+                        print("ASV is armed." if vehicle.armed else "ASV is disarmed. Standing By.")
                 time.sleep(1)
+            elif asv_mode == 1:  # Pre-loaded Mission
+                if verbose > 0 and change_asv_current_mode(asv_mode):
+                    print("Starting Pre-loaded Mission.")
+
+                if len(waypoints) == 0:
+                    if verbose > 0:
+                        print(f"Finished preloaded mission.")
+                        print("Setting mode to Stand-by.")
+                        print("Resetting mission list.")
+                    asv_mode = 0
+                    waypoints = mg.get_mission_list()[0]
+                    continue
+
+                if move2wp():
+                    time.sleep(1)
+
+            elif asv_mode == 2:  # Manual Mode
+                if change_asv_current_mode(asv_mode):
+                    if vehicle.mode != VehicleMode("MANUAL"):
+                        vehicle.mode = VehicleMode("MANUAL")
+                    if verbose > 0:
+                        print(f"Vehicle is now in {vehicle.mode}")
+                else:
+                    time.sleep(1)
+
+            elif asv_mode == 3:  # Simple Go-To
+                if change_asv_current_mode(asv_mode):
+                    if move2wp():
+                        if verbose > 0:
+                            print("Finished simple goto.")
+                            print("Setting mode to Stand-by.")
+                        asv_mode = 0
+
+            elif asv_mode == 4:  # RTL
+                if change_asv_current_mode(asv_mode):
+                    if vehicle.mode != VehicleMode("RTL"):
+                        vehicle.mode = VehicleMode("RTL")
+                    if verbose > 0:
+                        print(f"Vehicle is now in {vehicle.mode}")
+                else:
+                    time.sleep(1)
+        except Exception as e:
+            asv_mode = 0
+            time.sleep(1)
+            print(str(e))
 
     # Cerramos la conexion con el navio2
     mqtt.client.disconnect()

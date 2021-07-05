@@ -48,6 +48,9 @@ class WaterQualityModule():
         print("Charging the pump")
         self.pump.charge_probe()
 
+        # vector of strings that go into db
+        sample_strs = []
+
         # Iterate over the sample_nums
         for i in range(num_of_samples):
 
@@ -86,12 +89,25 @@ class WaterQualityModule():
 
             # el siguiente comando "commit()" guarda la tabla creada
             self.database.commit()
+            sample_strs.append(
+                "INSERT INTO sensor (ID,SAMPLE_NUM,BAT,TEMP,PH,DO,LATITUD,LONGITUD,COND,ORP,DATE) VALUES("
+                + str(self.sensor_data['ID']) + ","
+                + str(self.sensor_data['SAMPLE_NUM']) + ","
+                + str(self.sensor_data['BAT']) + ","
+                + str(self.sensor_data['WT']) + ","
+                + str(self.sensor_data['PH']) + ","
+                + str(self.sensor_data['DO']) + ","
+                + str(self.sensor_data['LATITUD']) + ","
+                + str(self.sensor_data['LONGITUD']) + ","
+                + str(self.sensor_data['COND']) + ","
+                + str(self.sensor_data['ORP']) + ","
+                + str(self.sensor_data['DATE']) + ")")
 
         """ Discharge the pump!"""
         print("Discharging the pump!")
         self.pump.discharge_probe()
 
-        return self.sensor_data # Return the last readed value #
+        return sample_strs # Return the last readed value #
 
     def read_frame(self):
 
