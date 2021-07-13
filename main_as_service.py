@@ -352,7 +352,7 @@ def on_message(_client, _, msg):
 
 
 if __name__ == '__main__':
-    with open("~/IDENDITY_FILE.ID") as f:
+    with open("/home/pi/IDENDITY_FILE.ID") as f:
         num_id = int(f.readline())
         conf_file_name = f"ASV_DRONE_{num_id}.conf"
 
