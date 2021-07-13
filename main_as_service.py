@@ -27,7 +27,7 @@ def obtener_ip_puerto(file_name='/etc/default/ardurover'):
     """
 
     if DEBUG:  # In debug mode, return the std connection string.
-        return 'tcp:127.0.0.1:5760'
+        return 'tcp:127.0.0.1:5762'
 
     with open(file_name, 'r') as f:
         # Look for TELEM4= line
