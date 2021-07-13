@@ -354,7 +354,7 @@ def on_message(_client, _, msg):
 if __name__ == '__main__':
     with open("/home/pi/IDENTITY_FILE.ID") as f:
         num_id = int(f.readline())
-        conf_file_name = f"ASV_DRONE_{num_id}.conf"
+        conf_file_name = f"/home/pi/ASV_Loyola_US/ASV_DRONE_{num_id}.conf"
 
     config = configparser.ConfigParser()
     config.read(conf_file_name)
