@@ -352,9 +352,12 @@ def on_message(_client, _, msg):
 
 
 if __name__ == '__main__':
+    with open("~/IDENDITY_FILE.ID") as f:
+        num_id = int(f.readline())
+        conf_file_name = f"ASV_DRONE_{num_id}.conf"
 
     config = configparser.ConfigParser()
-    config.read('ASV_DRONE_1.conf')
+    config.read(conf_file_name)
     verbose = int(config['ASV']['verbose'])
 
     DEBUG = str2bool(config['ASV']['DEBUG'])
