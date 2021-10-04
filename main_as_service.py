@@ -28,20 +28,22 @@ def obtener_ip_puerto(file_name='/etc/default/ardurover'):
 
     if DEBUG:  # In debug mode, return the std connection string.
         return 'tcp:127.0.0.1:5762'
-
-    with open(file_name, 'r') as f:
-        # Look for TELEM4= line
-        line = f.readline()
-        while line.find(config['ASV']['navio2']) != 0 or len(line) == 0:
-            line = f.readline()
-
-        # If there is not defined, raise an error
-        if len(line) == 0:
-            raise EOFError(f"Reached EOF without obtaining {config['ASV']['navio2']} in file.")
-        datos = line.split('"')
-
-        # Return the data. It must be similar to: 'tcp:127.0.0.1:5760'
-        return datos[1][3:]
+    else:  # else return the hardcoded con string for ASVs
+        return 'tcp:127.0.0.1:5760'
+    #
+    # with open(file_name, 'r') as f:
+    #     # Look for TELEM4= line
+    #     line = f.readline()
+    #     while line.find(config['ASV']['navio2']) != 0 or len(line) == 0:
+    #         line = f.readline()
+    #
+    #     # If there is not defined, raise an error
+    #     if len(line) == 0:
+    #         raise EOFError(f"Reached EOF without obtaining {config['ASV']['navio2']} in file.")
+    #     datos = line.split('"')
+    #
+    #     # Return the data. It must be similar to: 'tcp:127.0.0.1:5760'
+    #     return datos[1][3:]
 
 
 def manejador_de_senal(_, __):

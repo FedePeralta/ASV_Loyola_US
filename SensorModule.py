@@ -5,7 +5,7 @@ from datetime import datetime
 from PumpModule import WaterPumpModule
 
 
-sensor_keys = ['ID','SAMPLE_NUM','BAT','WT','PH','DO','LATITUD','LONGITUD','COND','ORP','DATE']
+sensor_keys = ['SAMPLE_NUM','BAT','WT','PH','DO','LATITUD','LONGITUD','COND','ORP','DATE']
 
 class WaterQualityModule():
 
@@ -41,7 +41,7 @@ class WaterQualityModule():
                                     serial_string=pump_parameters['serial_string'])
 
 
-    def take_a_sample(self, position, num_of_samples = 1):
+    def take_a_sample(self, position, num_of_samples = 1, drone_id=-1):
         """ Take num_of_samples and save the data with the given position in the database """
 
         """ Charge the pump!"""
@@ -70,7 +70,7 @@ class WaterQualityModule():
             print(self.sensor_data)
 
             # creamos una tupla de parametros que nos permitira introducir los datos en la tabla sensor
-            parametros = (self.sensor_data['ID'],
+            parametros = (drone_id,
                           self.sensor_data['SAMPLE_NUM'],
                           self.sensor_data['BAT'],
                           self.sensor_data['WT'],
@@ -91,7 +91,7 @@ class WaterQualityModule():
             self.database.commit()
             sample_strs.append(
                 "INSERT INTO sensor (ID,SAMPLE_NUM,BAT,TEMP,PH,DO,LATITUD,LONGITUD,COND,ORP,DATE) VALUES("
-                + str(self.sensor_data['ID']) + ","
+                + str(drone_id) + ","
                 + str(self.sensor_data['SAMPLE_NUM']) + ","
                 + str(self.sensor_data['BAT']) + ","
                 + str(self.sensor_data['WT']) + ","
