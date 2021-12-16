@@ -33,8 +33,10 @@ if __name__ == '__main__':
         # Esperamos 2 segundos #
         sleep(2)
         # Tomamos muestras continuamente #
-        modulo_de_sensores.take_a_sample(position = [0.0, 0.0],
-                                         num_of_samples = 1)
+        data = modulo_de_sensores.take_a_sample(position = [0.0, 0.0],
+                                                num_of_samples = 1)
+
+        print(data)
 
     # Cerramos la conexion con los sensores #
     modulo_de_sensores.close()
