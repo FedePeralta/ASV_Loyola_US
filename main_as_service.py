@@ -312,7 +312,7 @@ def move2wp():
         if SENSOR:
             reads = modulo_de_sensores.take_a_sample(position=[position.lat, position.lon], num_of_samples=3)
             for read in reads:
-                mqtt.send_new_msg(read, "database")  # Send the MQTT message
+                mqtt.send_new_msg(json.dumps(read), "database")  # Send the MQTT message
                 time.sleep(0.1)
         else:
             time.sleep(1.5)  # Sleep for a second
