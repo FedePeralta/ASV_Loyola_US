@@ -15,18 +15,22 @@ if __name__ == '__main__':
 
     # Creamos el objeto de modulo de sensores #
     bomba = WaterPumpModule(serial_string = "/dev/ttyACM0",
-                            charging_time=5,
-                            discharging_time=5,
+                            charging_time=7,
+                            discharging_time=2,
                             mode = 'BuiltInPin')
 
     while keep_going:
 
         # Esperamos 1 segundo
-        time.sleep(1)
+        # time.sleep(1)
+        a = input('cargar el tanque')
         # Cargamos la bomba
         bomba.charge_probe()
         # Esperamos un segundo después de cargarla
-        time.sleep(1)
+        # time.sleep(1)
+        if not keep_going:
+            continue
+        a = input('descargar el tanque')
         # La descargamos
         bomba.discharge_probe()
 
